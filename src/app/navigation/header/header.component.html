@@ -1,0 +1,21 @@
+<mat-toolbar color="primary">
+    <div fxHide.gt-xs>
+        <button mat-icon-button (click)="onClick()">
+            <mat-icon>menu</mat-icon>
+        </button>
+
+    </div>
+    <div>
+        <a routerLink="">
+            Firtness Training
+        </a>
+    </div>
+    <div fxFlex fxLayout fxLayoutAlign="end" fxHide.xs>
+        <ul fxLayout fxLayoutGap="10px" class="navigationHeader">
+            <li><a routerLink="">welcome</a></li>
+            <li><a routerLink="login">Login</a></li>
+            <li><a routerLink="signup">signup</a></li>
+            <li><a routerLink="training">Training</a></li>
+        </ul>
+    </div>
+</mat-toolbar>
