@@ -6,5 +6,5 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
     templateUrl: './stop-training.component.html'
 })
 export class StopTrainingComponent {
-    constructor(@Inject(MAT_DIALOG_DATA) public progredData: any) {}
+    constructor(@Inject(MAT_DIALOG_DATA) public progressData: any) {}
  }
