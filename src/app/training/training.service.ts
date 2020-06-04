@@ -31,7 +31,7 @@ export class TrainingService {
         this.exerciseChanged.next(null);
     }
 
-    cancelEsercise(progress: number) {
+    cancelExercise(progress: number) {
         this.exercises.push({
             ...this.runningExercise,
             duration: this.runningExercise.duration * (progress / 100),
