@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,6 +30,7 @@ import { AuthRoutingModule } from './auth/auth-routing.module';
     BrowserModule,
     AppRoutingModule,
     AuthRoutingModule,
+    AngularFirestoreModule,
     BrowserAnimationsModule,
     MaterialModule,
     FlexLayoutModule,
