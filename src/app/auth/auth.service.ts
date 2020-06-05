@@ -1,50 +1,57 @@
 import { Injectable } from '@angular/core';
-import { User } from './user.model';
-import { AuthData } from './auth-data.model';
-import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/auth';
+
+import { Subject } from 'rxjs';
+
+import { AuthData } from './auth-data.model';
+import { TrainingService } from '../training/training.service';
 
 @Injectable()
 export class AuthService {
 
     public authChange = new Subject<boolean>();
-    private user: User;
+    private isAuthenticated = false;
 
-    constructor(private router: Router) { }
+    constructor(
+        private router: Router,
+        private auth: AngularFireAuth,
+        private trainingService: TrainingService) { }
 
-    generateUser(user: User) {
-        this.user = {
-            email: user.email,
-            userId: user.userId
-        };
-        this.authChange.next(true);
-        this.onAuthSuccess();
+    initAuthListner() {
+        this.auth.authState.subscribe(user => {
+            if (user) {
+                this.isAuthenticated = true;
+                this.authChange.next(true);
+                this.router.navigate(['/training']);
+            }
+            else {
+                this.trainingService.cancelSubscription();
+                this.isAuthenticated = false;
+                this.authChange.next(false);
+                this.router.navigate(['/login']);
+            }
+        });
+    }
+    generateUser(user: AuthData) {
+        this.auth.createUserWithEmailAndPassword(user.email, user.password)
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     login(authData: AuthData) {
-        this.user = {
-            email: authData.email,
-            userId: Math.round(Math.random() * 10000).toString()
-        };
-        this.authChange.next(true);
-        this.onAuthSuccess();
+        this.auth.signInWithEmailAndPassword(authData.email, authData.password)
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     logout() {
-        this.user = null;
-        this.authChange.next(false);
-        this.router.navigate(['/login']);
-    }
-
-    getUser() {
-        return { ...this.user };
+        this.auth.signOut();
     }
 
     isAuth() {
-        return this.user != null;
-    }
-
-    private onAuthSuccess() {
-        this.router.navigate(['/training']);
+        return this.isAuthenticated;
     }
 }
