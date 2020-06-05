@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 
-import {takeUntil} from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 import { AuthService } from 'src/app/auth/auth.service';
 import { from, Subject } from 'rxjs';
@@ -20,9 +20,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.authService.authChange.pipe(takeUntil(this.onDestroy$))
-    .subscribe(authStatus => {
-      this.isAuth = authStatus;
-    });
+      .subscribe(authStatus => {
+        this.isAuth = authStatus;
+      });
   }
 
   onClick() {
@@ -34,8 +34,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.onDestroy$.next(true);
-    this.onDestroy$.unsubscribe();
+    if (this.onDestroy$) {
+      this.onDestroy$.next(true);
+      this.onDestroy$.unsubscribe();
+    }
   }
 
 }

@@ -33,8 +33,10 @@ export class SidenavListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.onDestroy$.next(true);
-    this.onDestroy$.unsubscribe();
+    if (this.onDestroy$) {
+      this.onDestroy$.next(true);
+      this.onDestroy$.unsubscribe();
+    }
   }
 
 }
