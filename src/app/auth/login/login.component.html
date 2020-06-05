@@ -3,10 +3,12 @@
         (ngSubmit)="onSubmit()">
         <mat-form-field>
             <input matInput type="email" placeholder="Email" email formControlName="email">
+            <mat-error>Invalid or missing email.</mat-error>
         </mat-form-field>
         <mat-form-field hintLabel="Password should be atleast 6 character long">
             <input matInput type="password" placeholder="Password" formControlName="password">
+            <mat-error>Missing password.</mat-error>
         </mat-form-field>
-        <button type="submit" mat-raised-button>Submit</button>
+        <button type="submit" mat-raised-button [disabled]="loginForm.invalid">Submit</button>
     </form>
 </section>

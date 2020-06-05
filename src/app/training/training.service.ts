@@ -9,6 +9,7 @@ export class TrainingService {
 
     exerciseChanged: Subject<Exercise> = new Subject<Exercise>();
     exercisesChanged: Subject<Exercise[]> = new Subject<Exercise[]>();
+    finishedExercisesChanged: Subject<Exercise[]> = new Subject<Exercise[]>();
     private availableExercises: Exercise[] = [];
     private runningExercise: Exercise;
     exercises: Exercise[] = [];
@@ -17,23 +18,23 @@ export class TrainingService {
 
     fetchAvailableExercise() {
         this.db.collection('availableExercises')
-        .snapshotChanges()
-        .pipe(map(docArray => {
-          return docArray.map(doc => {
-            return {
-              id: doc.payload.doc.id,
-              // tslint:disable-next-line: no-string-literal
-              name: doc.payload.doc.data()['name'],
-              // tslint:disable-next-line: no-string-literal
-              duration: doc.payload.doc.data()['duration'],
-              // tslint:disable-next-line: no-string-literal
-              calories: doc.payload.doc.data()['calories'],
-            };
-          });
-        })).subscribe((exercises: Exercise[]) => {
-            this.availableExercises = exercises;
-            this.exercisesChanged.next([...this.availableExercises]);
-        });
+            .snapshotChanges()
+            .pipe(map(docArray => {
+                return docArray.map(doc => {
+                    return {
+                        id: doc.payload.doc.id,
+                        // tslint:disable-next-line: no-string-literal
+                        name: doc.payload.doc.data()['name'],
+                        // tslint:disable-next-line: no-string-literal
+                        duration: doc.payload.doc.data()['duration'],
+                        // tslint:disable-next-line: no-string-literal
+                        calories: doc.payload.doc.data()['calories'],
+                    };
+                });
+            })).subscribe((exercises: Exercise[]) => {
+                this.availableExercises = exercises;
+                this.exercisesChanged.next([...this.availableExercises]);
+            });
     }
 
     startExercise(selectedId: string): void {
@@ -42,7 +43,7 @@ export class TrainingService {
     }
 
     completeExercise(): void {
-        this.exercises.push({
+        this.addDataToDatabase({
             ...this.runningExercise,
             date: new Date(),
             state: 'completed'
@@ -52,7 +53,7 @@ export class TrainingService {
     }
 
     cancelExercise(progress: number): void {
-        this.exercises.push({
+        this.addDataToDatabase({
             ...this.runningExercise,
             duration: this.runningExercise.duration * (progress / 100),
             calories: this.runningExercise.calories * (progress / 100),
@@ -67,7 +68,13 @@ export class TrainingService {
         return ({ ...this.runningExercise });
     }
 
-    getExersices(): Exercise[] {
-        return this.exercises.slice();
+    fetchFinishedExersices() {
+        this.db.collection('finishedExercise').valueChanges().subscribe((res: Exercise[]) => {
+            this.finishedExercisesChanged.next(res);
+        });
+    }
+
+    private addDataToDatabase(exercise: Exercise) {
+        this.db.collection('finishedExercise').add(exercise);
     }
 }
