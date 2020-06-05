@@ -21,10 +21,11 @@ export class TrainingService {
     constructor(private db: AngularFirestore, private uiSerive: UIService) { }
 
     fetchAvailableExercise() {
-        this.uiSerive.isLoaderChanged.next(false);
+        this.uiSerive.isLoaderChanged.next(true);
         this.fbSubs.push(this.db.collection('availableExercises')
             .snapshotChanges()
             .pipe(map(docArray => {
+                // throw(new Error());
                 return docArray.map(doc => {
                     return {
                         id: doc.payload.doc.id,
@@ -38,9 +39,13 @@ export class TrainingService {
                 });
             }))
             .subscribe((exercises: Exercise[]) => {
-                this.uiSerive.isLoaderChanged.next(true);
+                this.uiSerive.isLoaderChanged.next(false);
                 this.availableExercises = exercises;
                 this.exercisesChanged.next([...this.availableExercises]);
+            }, (error) => {
+                this.uiSerive.isLoaderChanged.next(false);
+                this.uiSerive.showSnackBar('Fetching exercise failed, please try again', null, 3000);
+                this.exerciseChanged.next(null);
             }));
     }
 

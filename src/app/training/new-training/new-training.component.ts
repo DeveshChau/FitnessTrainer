@@ -15,27 +15,29 @@ import { UIService } from 'src/app/shared/ui.service';
 })
 export class NewTrainingComponent implements OnInit, OnDestroy {
 
-  isLoading = false;
+  isLoading = true;
   loaderSub: Subscription;
-  exercises: Exercise[] = [];
+  exercises: Exercise[];
   exerciseSubscription: Subscription;
   constructor(private trainingServie: TrainingService, private db: AngularFirestore, private uiService: UIService) { }
 
   ngOnInit(): void {
-    this.trainingServie.fetchAvailableExercise();
     this.exerciseSubscription = this.trainingServie.exercisesChanged.subscribe(
       exercises => {
         this.exercises = exercises;
       }
     );
-
     this.loaderSub = this.uiService.isLoaderChanged.subscribe(
       res => {
         this.isLoading = res;
       }
-    )
+    );
+    this.fetchExercises();
   }
 
+  fetchExercises() {
+    this.trainingServie.fetchAvailableExercise();
+  }
   onStartTraining(form: NgForm) {
     this.trainingServie.startExercise(form.value.exercise);
   }
