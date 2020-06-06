@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { StoreModule } from '@ngrx/store';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,6 +19,7 @@ import { UIService } from './shared/ui.service';
 import { AuthModule } from './auth/auth.module';
 import { TrainingModule } from './training/training.module';
 import { AuthRoutingModule } from './auth/auth-routing.module';
+import { reducer } from './app.reducer';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import { AuthRoutingModule } from './auth/auth-routing.module';
     FlexLayoutModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AuthModule,
-    TrainingModule
+    TrainingModule,
+    StoreModule.forRoot(reducer)
   ],
   providers: [AuthService, TrainingService, UIService],
   bootstrap: [AppComponent],
