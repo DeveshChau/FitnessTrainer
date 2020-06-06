@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AngularFirestore } from '@angular/fire/firestore';
 
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import * as fromRoot from '../../app.reducer';
 
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
-import { UIService } from 'src/app/shared/ui.service';
 
 @Component({
   selector: 'app-new-training',
@@ -15,11 +15,14 @@ import { UIService } from 'src/app/shared/ui.service';
 })
 export class NewTrainingComponent implements OnInit, OnDestroy {
 
-  isLoading = true;
-  loaderSub: Subscription;
+  // isLoading = true;
+  isLoading$: Observable<boolean>;
   exercises: Exercise[];
   exerciseSubscription: Subscription;
-  constructor(private trainingServie: TrainingService, private db: AngularFirestore, private uiService: UIService) { }
+  constructor(
+    private trainingServie: TrainingService,
+    private store: Store<fromRoot.State>
+  ) { }
 
   ngOnInit(): void {
     this.exerciseSubscription = this.trainingServie.exercisesChanged.subscribe(
@@ -27,11 +30,7 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
         this.exercises = exercises;
       }
     );
-    this.loaderSub = this.uiService.isLoaderChanged.subscribe(
-      res => {
-        this.isLoading = res;
-      }
-    );
+    this.isLoading$ = this.store.select(fromRoot.getIsLoading);
     this.fetchExercises();
   }
 
@@ -45,9 +44,6 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.exerciseSubscription) {
       this.exerciseSubscription.unsubscribe();
-    }
-    if (this.loaderSub) {
-      this.loaderSub.unsubscribe();
     }
   }
 
