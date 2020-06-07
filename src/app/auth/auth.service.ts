@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../app.reducer';
 import * as UI from '../shared/ui.actions';
-import * as AUTH from '../shared/auth.actioins';
+import * as AUTH from './auth.actioins';
 
 import { AuthData } from './auth-data.model';
 import { TrainingService } from '../training/training.service';

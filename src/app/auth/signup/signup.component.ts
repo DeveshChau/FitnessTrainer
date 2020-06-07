@@ -16,7 +16,6 @@ import { UIService } from 'src/app/shared/ui.service';
 export class SignupComponent implements OnInit {
   isLoading = false;
   isLoading$: Observable<boolean>;
-  // loaderSub: Subscription;
   maxDate: any;
   constructor(
     private authSerive: AuthService,
@@ -26,11 +25,6 @@ export class SignupComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading$ = this.store.select(fromRoot.getIsLoading);
-    // this.loaderSub = this.uiSerive.isLoaderChanged.subscribe(
-    //   res => {
-    //     this.isLoading = res;
-    //   }
-    // );
     this.maxDate = new Date();
     this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
   }
@@ -38,10 +32,4 @@ export class SignupComponent implements OnInit {
   onSubmit(f: NgForm) {
     this.authSerive.generateUser(f.value);
   }
-
-  // ngOnDestroy() {
-  //   if (this.loaderSub) {
-  //     this.loaderSub.unsubscribe();
-  //   }
-  // }
 }

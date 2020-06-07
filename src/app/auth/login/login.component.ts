@@ -16,7 +16,6 @@ import { UIService } from 'src/app/shared/ui.service';
 export class LoginComponent implements OnInit {
 
   isLoading = false;
-  // loaderSub: Subscription;
   isLoading$: Observable<boolean>;
   loginForm = new FormGroup({
     email: new FormControl('', { validators: [Validators.required, Validators.email] }),
@@ -30,20 +29,10 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading$ = this.store.select(fromRoot.getIsLoading);
-    // this.loaderSub = this.uiSerive.isLoaderChanged.subscribe(
-    //   res => {
-    //     this.isLoading = res;
-    //   }
-    // );
   }
 
   onSubmit() {
     this.authService.login(this.loginForm.value);
   }
 
-  // ngOnDestroy() {
-  //   if (this.loaderSub) {
-  //     this.loaderSub.unsubscribe();
-  //   }
-  // }
 }
