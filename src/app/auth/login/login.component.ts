@@ -7,6 +7,7 @@ import * as fromRoot from '../../app.reducer';
 
 import { AuthService } from '../auth.service';
 import { UIService } from 'src/app/shared/ui.service';
+import { AuthData } from '../auth-data.model';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +33,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.authService.login(this.loginForm.value);
+    this.authService.login(this.loginForm.value as AuthData);
   }
 
 }

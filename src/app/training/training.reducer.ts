@@ -58,6 +58,7 @@ export function trainingReducer(state = initialState, action: TrainingActions) {
     }
 }
 
+// string 'training' is associated with training in the state - StoreModule.forFeature('training', trainingReducer) 
 export const getTrainingState = createFeatureSelector<TrainingState>('training');
 
 export const getAvailableExercise = createSelector(getTrainingState, (state: TrainingState) => state.availableExercise);

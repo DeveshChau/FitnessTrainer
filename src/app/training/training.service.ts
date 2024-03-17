@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 import { Subject, Subscription } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -39,13 +39,17 @@ export class TrainingService {
                     };
                 });
             }))
-            .subscribe((exercises: Exercise[]) => {
-                this.store.dispatch(new UI.StopLoading());
-                this.store.dispatch(new Training.SetAvailableExercise(exercises));
-            }, (error) => {
-                this.store.dispatch(new UI.StopLoading());
-                this.uiSerive.showSnackBar('Fetching exercise failed, please try again', null, 3000);
-            }));
+            .subscribe({
+                next:(exercises: Exercise[]) => {
+                    this.store.dispatch(new UI.StopLoading());
+                    this.store.dispatch(new Training.SetAvailableExercise(exercises));
+                },
+                error: (error) => {
+                    this.store.dispatch(new UI.StopLoading());
+                    this.uiSerive.showSnackBar('Fetching exercise failed, please try again', null, 3000);
+                }
+            })
+        );
     }
 
     startExercise(selectedId: string): void {
